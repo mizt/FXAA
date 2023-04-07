@@ -228,7 +228,7 @@ A. Or use FXAA_GREEN_AS_LUMA.
   #define mod fmod
   #define atan 6.28318530718-atan2
   
-  constexpr sampler linear(filter::linear, coord::pixel);
+  constexpr sampler linear(filter::linear, coord::normalized);
   
 #endif
 /*--------------------------------------------------------------------------*/
