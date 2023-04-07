@@ -212,6 +212,26 @@ A. Or use FXAA_GREEN_AS_LUMA.
     #define FXAA_PC_CONSOLE 0
 #endif
 /*--------------------------------------------------------------------------*/
+#ifndef FXAA_MSL
+  #define FXAA_MSL 0
+#else
+  #define vec2 float2
+  #define vec3 float3
+  #define vec4 float4
+  #define ivec2 int2
+  #define ivec3 int3
+  #define ivec4 int4
+  #define mat2 float2x2
+  #define mat3 float3x3
+  #define mat4 float4x4
+  #define sampler2D sampler
+  #define mod fmod
+  #define atan 6.28318530718-atan2
+  
+  constexpr sampler linear(filter::linear, coord::pixel);
+  
+#endif
+/*--------------------------------------------------------------------------*/
 #ifndef FXAA_GLSL_120
     #define FXAA_GLSL_120 0
 #endif
@@ -625,6 +645,20 @@ NOTE the other tuning knobs are now in the shader function inputs!
     #define FxaaInt2 ivec2
     #define FxaaSat(x) clamp(x, 0.0, 1.0)
     #define FxaaTex sampler2D
+#elif (FXAA_MSL == 1)
+    #define FxaaBool bool
+    #define FxaaDiscard discard
+    #define FxaaFloat float
+    #define FxaaFloat2 vec2
+    #define FxaaFloat3 vec3
+    #define FxaaFloat4 vec4
+    #define FxaaHalf float
+    #define FxaaHalf2 vec2
+    #define FxaaHalf3 vec3
+    #define FxaaHalf4 vec4
+    #define FxaaInt2 ivec2
+    #define FxaaSat(x) clamp(x, 0.0, 1.0)
+    #define FxaaTex texture2d<float,access::sample>
 #else
     #define FxaaBool bool
     #define FxaaDiscard clip(-1)
@@ -637,6 +671,11 @@ NOTE the other tuning knobs are now in the shader function inputs!
     #define FxaaHalf3 half3
     #define FxaaHalf4 half4
     #define FxaaSat(x) saturate(x)
+#endif
+/*--------------------------------------------------------------------------*/
+#if (FXAA_MSL == 1)
+    #define FxaaTexTop(t, p) t.sample(linear, p)
+    #define FxaaTexOff(t, p, o, r) t.sample(linear, p + (float2(o) * r))
 #endif
 /*--------------------------------------------------------------------------*/
 #if (FXAA_GLSL_120 == 1)
@@ -2045,3 +2084,4 @@ half4 FxaaPixelShader(
     return rgby2; }
 /*==========================================================================*/
 #endif
+  
