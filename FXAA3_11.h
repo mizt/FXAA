@@ -647,7 +647,7 @@ NOTE the other tuning knobs are now in the shader function inputs!
     #define FxaaTex sampler2D
 #elif (FXAA_MSL == 1)
     #define FxaaBool bool
-    #define FxaaDiscard discard
+    #define FxaaDiscard return vec4(0.0)
     #define FxaaFloat float
     #define FxaaFloat2 vec2
     #define FxaaFloat3 vec3
